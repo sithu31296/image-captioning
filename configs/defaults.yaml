@@ -1,0 +1,12 @@
+SAVE_DIR          : output
+MODEL             : ClipCap
+DATASET           : COCO
+TRAIN_DATA_PATH   : data/coco_train.pkl
+VAL_DATA_PATH     : data/coco_train.pkl
+SEQ_LEGNTH        : 10
+BATCH_SIZE        : 8
+EPOCHS            : 100
+EVAL_INTERVAL     : 10
+LR                : 0.001
+WEIGHT_DECAY      : 0.01
+WARMUP            : 10

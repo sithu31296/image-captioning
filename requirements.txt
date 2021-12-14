@@ -1,0 +1,4 @@
+ftfy
+regex
+tqdm
+transformers==4.12.5
