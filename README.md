@@ -72,6 +72,7 @@ $ python tools/infer.py \
 Sample inference result:
 
 ![test](assets/test.jpg)
+<br>
 A couple of people standing next to an elephant.
 
 
