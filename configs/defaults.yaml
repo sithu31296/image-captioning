@@ -1,9 +1,11 @@
 SAVE_DIR          : output
 MODEL             : ClipCap
+WEIGHTS           : checkpoints/clipcap/coco_weights.pt
 DATASET           : COCO
-TRAIN_DATA_PATH   : data/coco_train.pkl
-VAL_DATA_PATH     : data/coco_train.pkl
-SEQ_LEGNTH        : 10
+DATASET_ROOT      : 'C://Users//sithu//Documents//Datasets//COCO2014'
+TRAIN_DATA_PATH   : data/COCO/coco_train.pkl
+VAL_DATA_PATH     : data/COCO/coco_test.pkl
+SEQ_LENGTH        : 10
 BATCH_SIZE        : 8
 EPOCHS            : 100
 EVAL_INTERVAL     : 10

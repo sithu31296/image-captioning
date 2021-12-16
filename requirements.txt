@@ -1,4 +1,5 @@
 ftfy
 regex
 tqdm
+tabulate
 transformers==4.12.5

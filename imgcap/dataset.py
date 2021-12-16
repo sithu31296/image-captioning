@@ -33,10 +33,12 @@ class CaptionDataset(Dataset):
         return tokens, mask
 
     def __getitem__(self, index):
+        image_id = self.data[index]['image_id']
+        caption = self.data[index]['caption']
         tokens = self.data[index]['token']
         img_feat = self.data[index]['embedding']
         tokens, mask = self.pad_tokens(tokens)
-        return tokens, mask, img_feat
+        return tokens, mask, img_feat, image_id, caption
 
 
 if __name__ == '__main__':

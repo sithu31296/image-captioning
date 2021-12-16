@@ -20,10 +20,10 @@ Dataset | Train | Val | Test | Captions / Image | Vocab Size | Avg. Tokens / Cap
 
 COCO
 
-Model | BLEU-1↑ | BLEU-4↑ | METEOR↑ | ROUGE-L↑ | CIDEr↑ | SPICE↑ | Params <br><sup>(M) | Pretrained
---- | --- | --- | --- | --- | --- | --- | --- | ---
-ClipCap | - | 32.2 | 27.1 | - | 108.4 | 20.1 | 156 | [download](https://drive.google.com/file/d/1IdaBtMSvtyzF0ByVaBHtvM0JYSXRExRX/view?usp=sharing)
-LATGeO | 76.5 | 36.4 | 27.8 | 56.7 | 115.8 | - | -
+Model | BLEU-4↑ | METEOR↑ | ROUGE-L↑ | CIDEr↑ | SPICE↑ | Params <br><sup>(M) | Pretrained
+--- | --- | --- | --- | --- | --- | --- | --- 
+ClipCap | 32.2 | 27.1 | - | 108.4 | 20.1 | 156 | [download](https://drive.google.com/file/d/1IdaBtMSvtyzF0ByVaBHtvM0JYSXRExRX/view?usp=sharing)
+LATGeO | 36.4 | 27.8 | 56.7 | 115.8 | - | -
 
 Conceptual Captions
 
@@ -41,6 +41,23 @@ ClipCap | 79.7/12.2 | 67.7/11.3 | 49.4/9.7 | 65.7/11.1 | 156
 
 ## Requirements
 
+* torch >= 1.8.1
+* torchvision >= 0.8.1
+* Python >= 3.8
+
+Clone the repo recursively:
+
+```bash
+$ git clone --recursive https://github.com/sithu31296/image-captioning.git
+```
+
+Follow the installation steps in [coco-caption](https://github.com/sithu31296/coco-caption) if you want to evaluate, otherwise not needed.
+
+Other requirements can be installed with:
+
+```bash
+pip install -r requirements.txt
+```
 
 
 ## Inference
@@ -51,6 +68,12 @@ $ python tools/infer.py \
   --img-path TEST_IMAGE_PATH
   --beam-search False
 ```
+
+Sample inference result:
+
+![test](assets/test.jpg)
+A couple of people standing next to an elephant.
+
 
 ## Dataset Preparation
 
@@ -84,13 +107,23 @@ $ python tools/prepare_conceptual.py \
   --save-path data/ConceptualCaptions
 ```
 
+## Configuration File
+
+Create a yaml configuration file. Default configuration file can be found in [configs/defaults.yaml](configs/defaults.yaml)
+
+This file is needed for training and evaluation.
+
 ## Training
 
-Coming Soon
+```bash
+$ python tools/train.py --cfg CONFIG_FILE.yaml
+```
 
 ## Evaluation
 
-Coming Soon
+```bash
+$ python tools/val.py --cfg CONFIG_FILE.yaml
+```
 
 ## References
 
