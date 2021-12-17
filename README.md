@@ -1,20 +1,10 @@
-# Image Captioning (WIP)
+# Image Captioning 
 
+Most Image Captioning models are complicated and very hard to test. Traditional Image caption model first encodes the image using [BUTD](https://arxiv.org/abs/1707.07998) model, called the bottom up features. This is a Faster-RCNN model trained on [Visual Genome](https://visualgenome.org/) dataset. And then use an attention or transformer model to generate a caption. There is also the use of [SCST](https://arxiv.org/abs/1612.00563) to improve the results.
 
-## Supported Models
+In 2020, a new model from Microsoft is released, called [Oscar](https://github.com/microsoft/Oscar), which sets a new record in image captioning. This involves pre-training on large amount of datasets and fine-tuned on downstream tasks. This is also a very complicated and time-consuming process. There is also an improved work called [VinVL](https://arxiv.org/abs/2101.00529); which uses their object-attribute detection model to extract features instead of usual bottom-up features used in Oscar.
 
-* [ClipCap](https://arxiv.org/abs/2111.09734)
-* [LATGeO](https://arxiv.org/abs/2109.07799) (May be Later)
-
-## Supported Datasets
-
-Dataset | Train | Val | Test | Captions / Image | Vocab Size | Avg. Tokens / Caption
---- | --- | --- | --- | --- | --- | ---
-[COCO](https://cocodataset.org/#home) | 83k | 5k | 5k | 5 | - | -
-[ConceptualCaptions](https://ai.google.com/research/ConceptualCaptions) | 3M | 15k | - | 1 | 51k | 10.3
-[Flickr8k](https://forms.illinois.edu/sec/1713398) | - | - | - | - | - | -
-[Flickr30k](http://shannon.cs.illinois.edu/DenotationGraph/) | - | - | - | - | - | -
-[nocaps](https://nocaps.org/) | - | - | - | - | - | -
+After coming out the zero-shot model [CLIP](https://arxiv.org/abs/2103.00020) from OpenAI, many papers released on vision-language related tasks like [CLIP-ViL](https://arxiv.org/abs/2107.06383), [X-modaler](https://arxiv.org/abs/2103.17249) and lastly [ClipCap](https://arxiv.org/abs/2111.09734). Among them, ClipCap is the most simplest network everyone can easily test.
 
 ## Benchmarks
 
@@ -22,8 +12,8 @@ COCO
 
 Model | BLEU-4↑ | METEOR↑ | ROUGE-L↑ | CIDEr↑ | SPICE↑ | Params <br><sup>(M) | Pretrained
 --- | --- | --- | --- | --- | --- | --- | --- 
-ClipCap | 32.2 | 27.1 | - | 108.4 | 20.1 | 156 | [download](https://drive.google.com/file/d/1IdaBtMSvtyzF0ByVaBHtvM0JYSXRExRX/view?usp=sharing)
-LATGeO | 36.4 | 27.8 | 56.7 | 115.8 | - | -
+[ClipCap](https://arxiv.org/abs/2111.09734) | 32.2 | 27.1 | - | 108.4 | 20.1 | 156 | [download](https://drive.google.com/file/d/1IdaBtMSvtyzF0ByVaBHtvM0JYSXRExRX/view?usp=sharing)
+[LATGeO](https://arxiv.org/abs/2109.07799) | 36.4 | 27.8 | 56.7 | 115.8 | - | -
 
 Conceptual Captions
 
@@ -75,21 +65,44 @@ Sample inference result:
 <br>
 A couple of people standing next to an elephant.
 
+## Datasets
 
-## Dataset Preparation
+Dataset | Train | Val | Test | Captions / Image | Vocab Size | Avg. Tokens / Caption
+--- | --- | --- | --- | --- | --- | ---
+[COCO](https://cocodataset.org/#home) | 83k | 5k | 5k | 5 | - | -
+[ConceptualCaptions](https://ai.google.com/research/ConceptualCaptions) | 3M | 15k | - | 1 | 51k | 10.3
+[Flickr8k](https://forms.illinois.edu/sec/1713398) | 6k | 1k | 1k | 5 | - | -
+[Flickr30k](http://shannon.cs.illinois.edu/DenotationGraph/) | 29k | 1k | 1k | 5 | - | -
+[nocaps](https://nocaps.org/) | - | - | - | - | - | -
 
-### COCO
+## Datasets Preparation
 
-* Download **COCO2014** images from [here](https://cocodataset.org/#download).
+### COCO / Flickr8k / Flickr30k
+
+* Download dataset images.
+  * For COCO, download **COCO2014** images from [COCO](https://cocodataset.org/#download).
+  * For Flickr8k, download images from [Official Website](https://forms.illinois.edu/sec/1713398) or if you can't download it, try downloading from [Kaggle](https://www.kaggle.com/adityajn105/flickr8k).
+  * For Flickr30k, download images from [Official Website](http://shannon.cs.illinois.edu/DenotationGraph/) or if you can't download it, try downloading from [Kaggle](https://www.kaggle.com/hsankesara/flickr-image-dataset).
 * Download Karpathy splits for COCO, Flickr8k and Flickr30k from [here](http://cs.stanford.edu/people/karpathy/deepimagesent/caption_datasets.zip).
 * Run the following command to extract image features and tokens:
 
 ```bash
-$ python tools/prepare_coco.py \
-  --annot-path data/dataset_coco.json \
-  --dataset-path datasets/COCO2014 \
-  --save-path data/COCO
+$ python tools/prepare_coco_flickr.py \
+  --annot-path KARPATHY_ANNOT_JSON_PATH \
+  --dataset-path DATASET_ROOT_PATH \
+  --save-path SAVE_PATH
 ```
+
+* To evaluate with `coco-caption`, you need to convert Karpathy split json format to COCO json format.
+
+```bash
+$ python scripts/convert_coco_format.py \
+  --input-json KARPATHY_ANNOT_JSON_PATH \
+  --output-json COCO_JSON_SAVE_PATH \
+  --split 'test' or 'val'
+```
+
+> To evaluate on COCO-val, you can also use annotation file in `coco_caption/annotations/captions_val2014.json`.
 
 ### Conceptual Captions
 
@@ -106,6 +119,14 @@ $ python scripts/download_conceptual.py --root datasets/ConceptualCaptions
 $ python tools/prepare_conceptual.py \
   --dataset-path datasets/ConceptualCaptions \
   --save-path data/ConceptualCaptions
+```
+
+* To evaluate with `coco-caption`, you need to convert to COCO json format.
+
+```bash
+$ python scripts/convert_conceptual_to_coco.py \
+  --input-txt VAL_TXT_PATH \
+  --output-json COCO_JSON_SAVE_PATH
 ```
 
 ## Configuration File
@@ -143,5 +164,4 @@ Most of the codes are from:
   journal={arXiv preprint arXiv:2111.09734},
   year={2021}
 }
-
 ```
